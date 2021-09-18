@@ -4,28 +4,24 @@ export default class Line extends React.Component {
     // requires id_1 and id_2 of two other elements to initialize
     constructor(props) {
         super(props);
-        this.state = {};
 
         this.id = "line-" + Math.floor(Math.random()*100000); // creating a random number between 0 and 100000 for element identifier
         
-        this.initializeLineState(props.id_1, props.id_2);
+        this.initializeLineVariables(props.id_1, props.id_2);
 
         this.getStyle = this.getStyle.bind(this);
     }
 
-    initializeLineState(elementOneID, elementTwoID) {
+    initializeLineVariables(elementOneID, elementTwoID) { // initializes line points, angle, and length
         var elementOne = document.getElementById(elementOneID);
         var elementTwo = document.getElementById(elementTwoID);
 
         var lineCoords = this.getLineCoords(elementOne.getBoundingClientRect(), elementTwo.getBoundingClientRect());
 
-        console.log(lineCoords)
-        this.setState(lineCoords);
-
-        // default params use coords were previously entered
-        console.log(this.getLength(lineCoords));
-
-        this.setState({ rotate: this.getAngle(lineCoords), length: this.getLength(lineCoords)} );
+        this.x1 = Math.round(lineCoords.x1);
+        this.y1 = Math.round(lineCoords.y1);
+        this.rotation = this.getAngle(lineCoords);
+        this.length = this.getLength(lineCoords);
 
         var thickness = this.props.thickness;
 
@@ -33,7 +29,7 @@ export default class Line extends React.Component {
             thickness = 2;
         }
 
-        this.setState({ thickness: thickness });
+        this.thickness = thickness;
     }
 
     // gets the center cordinates of two rectangles
@@ -46,7 +42,12 @@ export default class Line extends React.Component {
 
         var siteOffset = { x: window.scrollX, y: window.scrollY }
 
-        return { x1: x1-siteOffset.x, y1: y1-siteOffset.y, x2: x2-siteOffset.x, y2: y2-siteOffset.y};
+        return { 
+            x1: x1-siteOffset.x, 
+            y1: y1-siteOffset.y, 
+            x2: x2-siteOffset.x, 
+            y2: y2-siteOffset.y
+        };
     }
 
     // uses Pythagorean theorem to estimate length, default params use coords what was already in the state
@@ -60,17 +61,26 @@ export default class Line extends React.Component {
     }
 
     getStyle() {
-        return ({
-            width: this.state.length + "px", 
-            height: this.state.thickness, 
-            transform: this.state.rotate + "deg",
-            backgroundColor: "white"
-        })
+        var style = {
+            position: "absolute",
+            top: this.x1 + "px",
+            left: this.y1 + "px",
+            width: this.length + "px", 
+            transformOrigin: '0px 0px',
+            transform: "rotate(" + this.rotation + "deg)",
+            borderColor: "white",
+            borderTopStyle: "solid",
+            borderTopWidth: this.thickness + "px"
+        };
+
+        console.log(style);
+
+        return style;
     }
 
     render() {
         return (
-            <div id = { this.id } style={this.getStyle()} x1={this.state.x1} x2={this.state.x2} y1={this.state.y1} y2={this.state.y2}></div>
+            <div id = { this.id } style={this.getStyle()}></div>
         )
     }
 }

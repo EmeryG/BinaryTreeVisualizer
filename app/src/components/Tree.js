@@ -32,11 +32,11 @@ export default class Tree extends React.Component {
                 { this.state.buttonMessage }
                 </button>
                 <br/>
+                {this.line}
                 <br/>
                 <button id="Test" onClick={this.createLine}>
                     Create Line
                 </button> 
-                {this.line}
             </div>
         );
     }
