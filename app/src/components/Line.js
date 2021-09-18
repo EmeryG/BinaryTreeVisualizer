@@ -35,18 +35,18 @@ export default class Line extends React.Component {
     // gets the center cordinates of two rectangles
     getLineCoords(rect1, rect2) {
         var x1 = rect1.left+rect1.width/2;
-        var y1 = rect1.bottom+rect1.height/2;
+        var y1 = rect1.top+rect1.height/2;
 
         var x2 = rect2.left+rect2.width/2;
-        var y2 = rect2.bottom+rect2.height/2;
+        var y2 = rect2.top+rect2.height/2;
 
         var siteOffset = { x: window.scrollX, y: window.scrollY }
 
         return { 
-            x1: x1-siteOffset.x, 
-            y1: y1-siteOffset.y, 
-            x2: x2-siteOffset.x, 
-            y2: y2-siteOffset.y
+            x1: x1+siteOffset.x, 
+            y1: y1+siteOffset.y, 
+            x2: x2+siteOffset.x, 
+            y2: y2+siteOffset.y
         };
     }
 
@@ -63,8 +63,8 @@ export default class Line extends React.Component {
     getStyle() {
         var style = {
             position: "absolute",
-            top: this.x1 + "px",
-            left: this.y1 + "px",
+            top: this.y1 + "px",
+            left: this.x1 + "px",
             width: this.length + "px", 
             transformOrigin: '0px 0px',
             transform: "rotate(" + this.rotation + "deg)",

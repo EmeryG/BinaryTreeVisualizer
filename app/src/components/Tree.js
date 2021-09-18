@@ -4,11 +4,10 @@ import Line from './Line'
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { buttonMessage : "Start"};
+        this.state = { buttonMessage : "Start", line: (<div></div>)};
 
         this.startAnimation = this.startAnimation.bind(this); 
         this.createLine = this.createLine.bind(this);
-        this.line = (<div></div>);
     }
     
 
@@ -22,7 +21,7 @@ export default class Tree extends React.Component {
     }
    
     createLine() {
-        this.line = (<Line id_1="Control" id_2="Test" />);
+        this.setState({line: (<Line id_1="Control" id_2="Test" />)})
     }
 
     render() {
@@ -31,9 +30,9 @@ export default class Tree extends React.Component {
                 <button id="Control" onClick={this.startAnimation}>
                 { this.state.buttonMessage }
                 </button>
-                <br/>
-                {this.line}
-                <br/>
+                <p>test</p>
+                <p>test2</p>
+                {this.state.line}
                 <button id="Test" onClick={this.createLine}>
                     Create Line
                 </button> 
