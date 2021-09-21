@@ -1,23 +1,27 @@
 import React from 'react';
 
+// uses id_1 and id_2 of elements that line connects
 export default class Line extends React.Component {
-    // requires id_1 and id_2 of two other elements to initialize
     constructor(props) {
         super(props);
-        
-        this.initializeLineVariables();
 
         this.getStyle = this.getStyle.bind(this);
     }
 
-    initializeLineVariables() { // initializes component variables
+    componentDidMount() {
+        this.setState({ count: 1 });
+
+        this.initializeLineVariables();
+    }
+
+    initializeLineVariables() {
         this.id = "line-" + Math.floor(Math.random()*100000); // creating a random number between 0 and 100000 for element identifier
 
         var rects = this.getElementRects(this.props.id_1, this.props.id_2)
 
-        if(rects === false) return false; // skips initialization if one element is null
+        if(rects === false) return false; // skips initialization if one element is nonexistent
         
-        var lineEndpoints = this.getEndpoints(rects[1], rects[2]);
+        var lineEndpoints = this.getEndpoints(rects[0], rects[1]);
 
         this.x1 = Math.round(lineEndpoints.x1);
         this.y1 = Math.round(lineEndpoints.y1);
@@ -33,12 +37,12 @@ export default class Line extends React.Component {
         this.thickness = thickness;
     }
 
-    // Updates global variable for future updating if element is null
+    // Returns false if one element is null
     getElementRects(elementOneID, elementTwoID) {
         var elementOne = document.getElementById(elementOneID);
         var elementTwo = document.getElementById(elementTwoID);
 
-        if(elementOne == null || elementTwo == null) {
+        if(elementOne === null || elementTwo === null || elementOne === undefined || elementTwo === undefined) {
             this.elementNull = true;
             return false;
         } else {
@@ -47,7 +51,6 @@ export default class Line extends React.Component {
         }
     }
 
-    // gets the center cordinates of two rectangles, which are the two endpoints of the line
     getEndpoints(rect1, rect2) {
         var x1 = rect1.left+rect1.width/2;
         var y1 = rect1.top+rect1.height/2;
@@ -75,7 +78,15 @@ export default class Line extends React.Component {
         return Math.round(Math.atan2(coords.y2-coords.y1, coords.x2-coords.x1)*180/Math.PI);
     }
 
-    // calculates style of line
+    updateInitCount() {
+        var count = this.state.count;
+
+        // after 2.75 seconds component will stop attempting rerender
+        if(count <= 15) {
+            this.setState({ count: this.state.count+1 });
+        }
+    }
+
     getStyle() {
         var style = {
             position: "absolute",
@@ -89,14 +100,14 @@ export default class Line extends React.Component {
             borderTopWidth: this.thickness + "px"
         };
 
-        console.log(style);
-
         return style;
     }
 
     render() {
         if(this.elementNull) {
             var result = this.initializeLineVariables()
+
+            setTimeout(this.updateInitCount, 250);
 
             if(!result) return (<div></div>);
         }

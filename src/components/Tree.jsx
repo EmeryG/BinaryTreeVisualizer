@@ -5,25 +5,20 @@ import './Tree.css';
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { buttonMessage : "Start", line: (<div style={{position: "absolute"}}></div>)};
+        this.state = { buttonMessage : "Start"};
 
         this.startAnimation = this.startAnimation.bind(this); 
-        this.createLine = this.createLine.bind(this);
     }
     
 
     startAnimation() {
         if (this.state.buttonMessage === "Start") {
             this.setState({ buttonMessage: "Randomize"});
-            this.forceUpdate();
         } else {
 
         }
     }
    
-    createLine() {
-        this.setState({line: (<Line id_1="Control" id_2="Test" />)})
-    }
 
     render() {
         return (
@@ -37,7 +32,7 @@ export default class Tree extends React.Component {
                 <div class="treerow">
                     <p>test</p>
                     <p>test2</p>
-                    <button id="Test" onClick={this.createLine}>
+                    <button id="Test">
                         Create Line
                     </button> 
                 </div>
