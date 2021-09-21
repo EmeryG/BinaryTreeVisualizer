@@ -78,7 +78,8 @@ export default class Line extends React.Component {
         return Math.round(Math.atan2(coords.y2-coords.y1, coords.x2-coords.x1)*180/Math.PI);
     }
 
-    updateInitCount() {
+    // updating state in react reinitializes component
+    reInitalizeAndRender() {
         var count = this.state.count;
 
         // after 2.75 seconds component will stop attempting rerender
@@ -107,7 +108,7 @@ export default class Line extends React.Component {
         if(this.elementNull) {
             var result = this.initializeLineVariables()
 
-            setTimeout(this.updateInitCount, 250);
+            setTimeout(this.reInitalizeAndRender, 250);
 
             if(!result) return (<div></div>);
         }
