@@ -33,7 +33,7 @@ export default class Tree extends React.Component {
                         { this.state.buttonMessage }
                     </button>
                 </div>
-                {this.state.line}
+                <Line id_1="Control" id_2="Test" />
                 <div class="treerow">
                     <p>test</p>
                     <p>test2</p>

@@ -4,24 +4,25 @@ export default class Line extends React.Component {
     // requires id_1 and id_2 of two other elements to initialize
     constructor(props) {
         super(props);
-
-        this.id = "line-" + Math.floor(Math.random()*100000); // creating a random number between 0 and 100000 for element identifier
         
-        this.initializeLineVariables(props.id_1, props.id_2);
+        this.initializeLineVariables();
 
         this.getStyle = this.getStyle.bind(this);
     }
 
-    initializeLineVariables(elementOneID, elementTwoID) { // initializes line points, angle, and length
-        var elementOne = document.getElementById(elementOneID);
-        var elementTwo = document.getElementById(elementTwoID);
+    initializeLineVariables() { // initializes component variables
+        this.id = "line-" + Math.floor(Math.random()*100000); // creating a random number between 0 and 100000 for element identifier
 
-        var lineCoords = this.getLineCoords(elementOne.getBoundingClientRect(), elementTwo.getBoundingClientRect());
+        var rects = this.getElementRects(this.props.id_1, this.props.id_2)
 
-        this.x1 = Math.round(lineCoords.x1);
-        this.y1 = Math.round(lineCoords.y1);
-        this.rotation = this.getAngle(lineCoords);
-        this.length = this.getLength(lineCoords);
+        if(rects === false) return false; // skips initialization if one element is null
+        
+        var lineEndpoints = this.getEndpoints(rects[1], rects[2]);
+
+        this.x1 = Math.round(lineEndpoints.x1);
+        this.y1 = Math.round(lineEndpoints.y1);
+        this.rotation = this.getAngle(lineEndpoints);
+        this.length = this.getLength(lineEndpoints);
 
         var thickness = this.props.thickness;
 
@@ -32,8 +33,22 @@ export default class Line extends React.Component {
         this.thickness = thickness;
     }
 
-    // gets the center cordinates of two rectangles
-    getLineCoords(rect1, rect2) {
+    // Updates global variable for future updating if element is null
+    getElementRects(elementOneID, elementTwoID) {
+        var elementOne = document.getElementById(elementOneID);
+        var elementTwo = document.getElementById(elementTwoID);
+
+        if(elementOne == null || elementTwo == null) {
+            this.elementNull = true;
+            return false;
+        } else {
+            this.elementNull = false;
+            return [ elementOne.getBoundingClientRect(), elementTwo.getBoundingClientRect() ];;
+        }
+    }
+
+    // gets the center cordinates of two rectangles, which are the two endpoints of the line
+    getEndpoints(rect1, rect2) {
         var x1 = rect1.left+rect1.width/2;
         var y1 = rect1.top+rect1.height/2;
 
@@ -52,7 +67,7 @@ export default class Line extends React.Component {
 
     // uses Pythagorean theorem to estimate length, default params use coords what was already in the state
     getLength(coords) {
-        return Math.round(Math.sqrt((coords.x1-coords.x2)*(coords.x1-coords.x2)+(coords.y1-coords.y2)*(coords.y1-coords.y2))); // sqrt((x1-x2)*2+(y1+y2)*2)
+        return Math.round(Math.sqrt((coords.x1-coords.x2)*(coords.x1-coords.x2)+(coords.y1-coords.y2)*(coords.y1-coords.y2))); 
     }
 
     // gets angle in degrees from element 1 to element 2
@@ -60,6 +75,7 @@ export default class Line extends React.Component {
         return Math.round(Math.atan2(coords.y2-coords.y1, coords.x2-coords.x1)*180/Math.PI);
     }
 
+    // calculates style of line
     getStyle() {
         var style = {
             position: "absolute",
@@ -79,6 +95,12 @@ export default class Line extends React.Component {
     }
 
     render() {
+        if(this.elementNull) {
+            var result = this.initializeLineVariables()
+
+            if(!result) return (<div></div>);
+        }
+
         return (
             <div id = { this.id } style={this.getStyle()}></div>
         )
