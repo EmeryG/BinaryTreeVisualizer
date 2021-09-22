@@ -1,5 +1,6 @@
 import React from 'react';
 import Line from './Line';
+import Node from './Node';
 import './Tree.css';
 
 export default class Tree extends React.Component {
@@ -22,19 +23,21 @@ export default class Tree extends React.Component {
 
     render() {
         return (
-            <div class="tree">
-                <div class="treerow">
+            <div>
+                <div>
                     <button id="Control" onClick={this.startAnimation}>
                         { this.state.buttonMessage }
                     </button>
                 </div>
-                <Line id_1="Control" id_2="Test" />
+
                 <div class="treerow">
-                    <p>test</p>
-                    <p>test2</p>
-                    <button id="Test">
-                        Create Line
-                    </button> 
+                    <Node id="node1" char="A"/>
+                </div>
+                    <Line id_1="node1" id_2="node2" />
+                    <Line id_1="node2" id_2="node3" />
+                <div class="treerow">
+                    <Node id="node2" char="B"/>
+                    <Node id="node3" char="C"/>
                 </div>
             </div>
         );
