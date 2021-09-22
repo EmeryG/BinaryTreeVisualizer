@@ -6,6 +6,7 @@ export default class Line extends React.Component {
         super(props);
 
         this.getStyle = this.getStyle.bind(this);
+        this.reInitalizeAndRender = this.reInitalizeAndRender.bind(this);
     }
 
     componentDidMount() {
@@ -85,6 +86,10 @@ export default class Line extends React.Component {
         // after 2.75 seconds component will stop attempting rerender
         if(count <= 15) {
             this.setState({ count: this.state.count+1 });
+        } else {
+            console.log("Giving up on line creation. ID: " + this.id);
+            console.log("Endpoint 1 ID: " + this.props.id_1);
+            console.log("Endpoint 2 ID: " + this.props.id_2);
         }
     }
 
@@ -108,13 +113,13 @@ export default class Line extends React.Component {
         if(this.elementNull) {
             var result = this.initializeLineVariables()
 
-            setTimeout(this.reInitalizeAndRender, 250);
+            setTimeout(this.reInitalizeAndRender, 500);
 
             if(!result) return (<div></div>);
         }
 
         return (
-            <div id = { this.id } style={this.getStyle()}></div>
+            <div id = { this.id } style={ this.getStyle() }></div>
         )
     }
 }
