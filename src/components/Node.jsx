@@ -4,7 +4,7 @@ import React from 'react';
 export default class Node extends React.Component {
     render() {
         return (
-            <span><h1>{this.props.char}</h1></span>
+            <span id={this.props.id}><h1>{this.props.char}</h1></span>
         )
     }
 }
