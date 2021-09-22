@@ -30,12 +30,12 @@ export default class Tree extends React.Component {
                     </button>
                 </div>
 
-                <div class="treerow">
+                <div className="treerow">
                     <Node id="node1" char="A"/>
                 </div>
                     <Line id_1="node1" id_2="node2" />
-                    <Line id_1="node2" id_2="node3" />
-                <div class="treerow">
+                    <Line id_1="node1" id_2="node3" />
+                <div className="treerow">
                     <Node id="node2" char="B"/>
                     <Node id="node3" char="C"/>
                 </div>
