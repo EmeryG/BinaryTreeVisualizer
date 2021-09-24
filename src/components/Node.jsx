@@ -4,7 +4,7 @@ import React from 'react';
 export default class NodeComponent extends React.Component {
     render() {
         return (
-            <div key={this.props.value} ><h1>{this.props.value}</h1></div>
+            <div key={this.props.value} id={"node-" + this.props.value}><h1>{this.props.value}</h1></div>
         )
     }
 }

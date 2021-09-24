@@ -24,39 +24,50 @@ export default class Tree extends React.Component {
     }
    
     generateTree() {
-        var binaryTree = new BinaryTree(7);
+        var binaryTree = new BinaryTree(6);
 
         for(let i = 0; i < 32; i++) {
             binaryTree.addNode(Math.round(Math.random()*60));
         }
 
-        var nodeJSXMap = binaryTree.getNodeJSXHashmap();
+        var treeHashmap = binaryTree.getJSXHashmap();
 
-        var treeJSX = this.concatNodeJSXHashmap(nodeJSXMap);
+        var treeJSX = this.treeHashmapToJSX(treeHashmap);
         
         this.setState({ treeGeneration: treeJSX });
     }
 
-    concatNodeJSXHashmap(nodeJSXMap) {
-        var nodeJSXArray = Array.from(nodeJSXMap.values());
+    treeHashmapToJSX(treeHashmap) {
+        var treeRowArray = Array.from(treeHashmap.values());
+
+        treeRowArray.sort(this.arrayLengthCompare);
 
         return (
             <div>
-                {nodeJSXArray.map((row, rowNum) => 
-                    this.treeRowFromNodeJSX(row, "treerow-" + rowNum)
+                {treeRowArray.map((treeRow, index) => 
+                    this.treeRowToJSX(treeRow, index+1)
                 )}
             </div>
         );
     }
 
-    treeRowFromNodeJSX(nodeArray, rowId="") {
+    treeRowToJSX(nodeArray, rowNum) {
         return (
-            <div key={rowId} className="treerow">
+            <div key={"treerow-" + rowNum} className="treerow">
                 {nodeArray}
             </div>
         );
     }
 
+    arrayLengthCompare(a, b) {
+        if(a.length > b.length) {
+            return 1;
+        } else if (a.length < b.length) {
+            return -1;
+        }
+
+        return 0;
+    }
     render() {
         return (
             <div>
