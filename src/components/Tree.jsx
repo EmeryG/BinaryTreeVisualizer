@@ -1,13 +1,13 @@
 import React from 'react';
 import Line from './Line';
-import Node from './Node';
+import NodeComponent from './Node';
 import BinaryTree from './BinaryTree';
 import './Tree.css';
 
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { buttonMessage : "Start"};
+        this.state = { buttonMessage : "Start", treeGeneration: (<div>test</div>)};
 
         this.binarytree = null;
         this.startAnimation = this.startAnimation.bind(this);
@@ -24,23 +24,44 @@ export default class Tree extends React.Component {
     }
    
     generateTree() {
-        let treeJSX;
-
-        let rowJSX = [(
-            <div className="treerow">
-                <Node id="node1" char="A"/>
-            </div>
-        )];
-
         var binaryTree = new BinaryTree(7);
 
         for(let i = 0; i < 32; i++) {
-            binaryTree.add(Math.round(Math.random()*60));
+            binaryTree.addNode(Math.round(Math.random()*60));
         }
+
+        var treeJSXHashmap = binaryTree.getNodeJSXHashmap();
+
+        var treeJSX = this.compileJSXHashmap(treeJSXHashmap);
+
+        console.log(treeJSX);
+        
+        this.setState({ treeGeneration: treeJSX });
     }
 
-    generateRow() {
+    compileJSXHashmap(binaryTree) {
+        var JSXRows = [];
 
+        for(var row of binaryTree.values()) {
+            JSXRows.push(this.compileJSXArray(row));
+        }
+
+        return (
+            <div>
+                testing2
+                {JSXRows.reduce((row1, row2) => {
+                    return (<div>{row1}</div>);
+                })}
+            </div>
+        );
+    }
+
+    compileJSXArray(row) {
+        return (
+            <div className="treeRow">
+                {row.reduce((item1, item2) => item1+item)}
+            </div>
+        );
     }
 
     render() {
@@ -52,25 +73,7 @@ export default class Tree extends React.Component {
                     </button>
                 </div>
 
-                <div className="treerow">
-                    <Node id="node1" char="A"/>
-                </div>
-                    <Line id_1="node1" id_2="node2" />
-                    <Line id_1="node1" id_2="node3" />
-                <div className="treerow">
-                    <Node id="node2" char="B"/>
-                    <Node id="node3" char="C"/>
-                </div>
-                    <Line id_1="node2" id_2="node4" />
-                    <Line id_1="node2" id_2="node5" />
-                    <Line id_1="node3" id_2="node6" />
-                    <Line id_1="node3" id_2="node7" />
-                <div className="treerow">
-                    <Node id="node4" char="B"/>
-                    <Node id="node5" char="C"/>
-                    <Node id="node6" char="D"/>
-                    <Node id="node7" char="E"/>
-                </div>
+                {this.state.treeGeneration}
             </div>
         );
     }
