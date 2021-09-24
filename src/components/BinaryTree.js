@@ -41,7 +41,7 @@ export default class BinaryTree {
     }
 
     // Returns entire tree's nodes in a hashmap. Keys are heights, values are list objects with Node JSX
-    getNodeJSXHashmap(selected = null, map = null, height=1) {
+    getNodeHashmap(selected = null, map = null, height=1) {
         if(map === null) {
             map = new Map();
             selected = this._root;
@@ -51,13 +51,13 @@ export default class BinaryTree {
 
         // If key exists, add one to existing array list
         if(map.has(height)) {
-            map.get(height).push(selected.getNodeComponent);
+            map.get(height).push(selected);
         } else {
-            map.set(height, [ selected.getNodeComponent() ]);
+            map.set(height, [ selected ]);
         }
         
-        this.getNodeJSXHashmap(selected.left, map, height+1);
-        this.getNodeJSXHashmap(selected.right, map, height+1);
+        this.getNodeHashmap(selected.left, map, height+1);
+        this.getNodeHashmap(selected.right, map, height+1);
 
         return map;
     }

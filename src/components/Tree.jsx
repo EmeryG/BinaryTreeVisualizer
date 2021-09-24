@@ -30,36 +30,29 @@ export default class Tree extends React.Component {
             binaryTree.addNode(Math.round(Math.random()*60));
         }
 
-        var treeJSXHashmap = binaryTree.getNodeJSXHashmap();
+        var binaryTreeMap = binaryTree.getNodeHashmap();
 
-        var treeJSX = this.compileJSXHashmap(treeJSXHashmap);
-
-        console.log(treeJSX);
+        var treeJSX = this.binaryTreeHashmapToJSX(binaryTreeMap);
         
         this.setState({ treeGeneration: treeJSX });
     }
 
-    compileJSXHashmap(binaryTree) {
-        var JSXRows = [];
-
-        for(var row of binaryTree.values()) {
-            JSXRows.push(this.compileJSXArray(row));
-        }
+    binaryTreeHashmapToJSX(binaryTreeMap) {
+        var treeRows = Array.from(binaryTreeMap);
 
         return (
             <div>
-                testing2
-                {JSXRows.reduce((row1, row2) => {
-                    return (<div>{row1}</div>);
-                })}
+                {treeRows.map((row, rowNum) => 
+                    this.nodeArrayToJSX(row, "treerow-" + rowNum)
+                )}
             </div>
         );
     }
 
-    compileJSXArray(row) {
+    nodeArrayToJSX(nodeArray, rowId="") {
         return (
-            <div className="treeRow">
-                {row.reduce((item1, item2) => item1+item)}
+            <div id={rowId} className="treeRow">
+                    {nodeArray.map((node, i) => { return node.getNodeComponent() })}
             </div>
         );
     }

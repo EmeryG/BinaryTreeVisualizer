@@ -1,10 +1,10 @@
 import React from 'react';
 
 // uses props.char
-export default class Node extends React.Component {
+export default class NodeComponent extends React.Component {
     render() {
         return (
-            <span id={this.props.id}><h1>{this.props.char}</h1></span>
+            <span id={"node-" + this.props.value}><h1>{this.props.value}</h1></span>
         )
     }
 }
