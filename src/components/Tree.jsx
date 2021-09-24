@@ -1,13 +1,13 @@
 import React from 'react';
 import Line from './Line';
 import NodeComponent from './Node';
-import BinaryTree from './BinaryTree';
+import { BinaryTree, Node } from './BinaryTree';
 import './Tree.css';
 
 export default class Tree extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { buttonMessage : "Start", treeGeneration: (<div>test</div>)};
+        this.state = { buttonMessage : "Start", treeGeneration: (<div></div>)};
 
         this.binarytree = null;
         this.startAnimation = this.startAnimation.bind(this);
@@ -30,29 +30,29 @@ export default class Tree extends React.Component {
             binaryTree.addNode(Math.round(Math.random()*60));
         }
 
-        var binaryTreeMap = binaryTree.getNodeHashmap();
+        var nodeJSXMap = binaryTree.getNodeJSXHashmap();
 
-        var treeJSX = this.binaryTreeHashmapToJSX(binaryTreeMap);
+        var treeJSX = this.concatNodeJSXHashmap(nodeJSXMap);
         
         this.setState({ treeGeneration: treeJSX });
     }
 
-    binaryTreeHashmapToJSX(binaryTreeMap) {
-        var treeRows = Array.from(binaryTreeMap);
+    concatNodeJSXHashmap(nodeJSXMap) {
+        var nodeJSXArray = Array.from(nodeJSXMap.values());
 
         return (
             <div>
-                {treeRows.map((row, rowNum) => 
-                    this.nodeArrayToJSX(row, "treerow-" + rowNum)
+                {nodeJSXArray.map((row, rowNum) => 
+                    this.treeRowFromNodeJSX(row, "treerow-" + rowNum)
                 )}
             </div>
         );
     }
 
-    nodeArrayToJSX(nodeArray, rowId="") {
+    treeRowFromNodeJSX(nodeArray, rowId="") {
         return (
-            <div id={rowId} className="treeRow">
-                    {nodeArray.map((node, i) => { return node.getNodeComponent() })}
+            <div key={rowId} className="treerow">
+                {nodeArray}
             </div>
         );
     }
