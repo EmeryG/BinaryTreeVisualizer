@@ -62,7 +62,7 @@ class BinaryTree {
     _moveJSXtoMap(selected, map, height, fillBlanks) {
         if(selected === null) {
             if(fillBlanks) { 
-                return <h1></h1> 
+                return <h1 class="blank">00</h1> 
             } else {
                 return null;
             }
