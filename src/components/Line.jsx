@@ -6,28 +6,23 @@ export default class Line extends React.Component {
         super(props);
 
         this.getStyle = this.getStyle.bind(this);
-        this.reInitalizeAndRender = this.reInitalizeAndRender.bind(this);
+        this.toElementNull = true;
     }
 
     componentDidMount() {
-        this.setState({ count: 1 });
+        this.state = { x1: 0, y1: 0, rotation: 0, length: 0 };
 
         this.initializeLineVariables();
+
+        this.interval = setInterval(() => this.calculateLineState(this.props), 250);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     initializeLineVariables() {
-        this.id = "line-" + Math.floor(Math.random()*100000); // creating a random number between 0 and 100000 for element identifier
-
-        let rects = this.getElementRects(this.props.id_1, this.props.id_2)
-
-        if(rects === false) return false; // skips initialization if one element is nonexistent
-        
-        let lineEndpoints = this.getEndpoints(rects[0], rects[1]);
-
-        this.x1 = Math.round(lineEndpoints.x1);
-        this.y1 = Math.round(lineEndpoints.y1);
-        this.rotation = this.getAngle(lineEndpoints);
-        this.length = this.getLength(lineEndpoints);
+        this.id = "line-" + this.props.id_1 + "to" + this.props.id_2; // creating a random number between 0 and 100000 for element identifier
 
         let thickness = this.props.thickness;
 
@@ -36,6 +31,36 @@ export default class Line extends React.Component {
         }
 
         this.thickness = thickness;
+
+        this.calculateLineState(this.props);
+    }
+
+    calculateLineState(lineProps) {
+        let rects = this.getElementRects(lineProps.id_1, lineProps.id_2);
+
+        // skips calculation if one element is nonexistent
+        if(rects === false) {
+            this.toElementNull = true;
+            return false;
+        } else {
+            this.toElementNull = false;
+        }
+        
+        let lineEndpoints = this.getEndpoints(rects[0], rects[1]);
+
+        var newState = {
+            x1: Math.round(lineEndpoints.x1), 
+            y1: Math.round(lineEndpoints.y1), 
+            rotation: this.getAngle(lineEndpoints),
+            length: this.getLength(lineEndpoints),
+        };
+
+        // checks if a rerender is necessary through changing state
+        if(this.state.x1 != newState.x1 || this.state.y1 != newState.y1) {
+            this.setState(newState);
+        } else {
+            console.log("state is equal");
+        }
     }
 
     // Returns false if one element is null
@@ -44,10 +69,8 @@ export default class Line extends React.Component {
         let elementTwo = document.getElementById(elementTwoID);
 
         if(elementOne === null || elementTwo === null || elementOne === undefined || elementTwo === undefined) {
-            this.elementNull = true;
             return false;
         } else {
-            this.elementNull = false;
             return [ elementOne.getBoundingClientRect(), elementTwo.getBoundingClientRect() ];;
         }
     }
@@ -79,28 +102,14 @@ export default class Line extends React.Component {
         return Math.round(Math.atan2(coords.y2-coords.y1, coords.x2-coords.x1)*180/Math.PI);
     }
 
-    // updating state in react reinitializes component
-    reInitalizeAndRender() {
-        let count = this.state.count;
-
-        // after 2.75 seconds component will stop attempting rerender
-        if(count <= 15) {
-            this.setState({ count: this.state.count+1 });
-        } else {
-            console.log("Giving up on line creation. ID: " + this.id);
-            console.log("Endpoint 1 ID: " + this.props.id_1);
-            console.log("Endpoint 2 ID: " + this.props.id_2);
-        }
-    }
-
-    getStyle() {
+    getStyle(currentState) {
         let style = {
             position: "absolute",
-            top: this.y1 + "px",
-            left: this.x1 + "px",
-            width: this.length + "px", 
+            top: currentState.y1 + "px",
+            left: currentState.x1 + "px",
+            width: currentState.length + "px", 
             transformOrigin: '0px 0px',
-            transform: "rotate(" + this.rotation + "deg)",
+            transform: "rotate(" + currentState.rotation + "deg)",
             borderColor: "white",
             borderTopStyle: "solid",
             borderTopWidth: this.thickness + "px"
@@ -110,16 +119,10 @@ export default class Line extends React.Component {
     }
 
     render() {
-        if(this.elementNull) {
-            let result = this.initializeLineVariables()
-
-            setTimeout(this.reInitalizeAndRender, 500);
-
-            if(!result) return (<div></div>);
-        }
+        if(this.toElementNull) return (<div></div>);
 
         return (
-            <div id = { this.id } style={ this.getStyle() }></div>
+            <div id = { this.id } style={ this.getStyle(this.state) }></div>
         )
     }
 }
