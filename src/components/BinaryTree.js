@@ -13,7 +13,7 @@ class Node {
         if(this.parent != null) {
             return (<span>
                 <NodeComponent key={this.value} id={this.value} value={this.value}/>
-                <Line id_1={ "node-" + this.parent.value} id_2={ "node-" + this.value} />
+                <Line id_1={ "node-" + this.value} id_2={ "node-" + this.parent.value} />
             </span>);
         } else {
             return <NodeComponent key={this.value} id={this.value} value={this.value}/>

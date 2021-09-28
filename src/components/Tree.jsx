@@ -38,9 +38,7 @@ export default class Tree extends React.Component {
     }
 
     treeHashmapToJSX(treeHashmap) {
-        var treeRowArray = Array.from(treeHashmap.values());
-
-        treeRowArray.sort(this.arrayLengthCompare);
+        var treeRowArray = this.hashmapToArray(treeHashmap);
 
         return (
             <div>
@@ -59,15 +57,17 @@ export default class Tree extends React.Component {
         );
     }
 
-    arrayLengthCompare(a, b) {
-        if(a.length > b.length) {
-            return 1;
-        } else if (a.length < b.length) {
-            return -1;
-        }
+    hashmapToArray(hashmap) {
+        var array = [];
 
-        return 0;
+        Array.from(hashmap.keys()).sort().forEach((key) => {
+            array.push([hashmap.get(key)]);
+        })
+
+        return array;
     }
+
+
     render() {
         return (
             <div>
