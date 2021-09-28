@@ -26,8 +26,8 @@ export default class Tree extends React.Component {
     generateTree() {
         var binaryTree = new BinaryTree(6);
 
-        for(let i = 0; i < 32; i++) {
-            binaryTree.addNode(Math.round(Math.random()*60));
+        for(let i = 0; i < 45; i++) {
+            binaryTree.addNode(Math.round(Math.random()*99));
         }
 
         var treeHashmap = binaryTree.getJSXHashmap();
